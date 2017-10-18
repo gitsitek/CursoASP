@@ -10,3 +10,8 @@
         <% Next %>
 	</body>
 </html>
+<%
+Set cnn = Server.CreateObject("ADODB.Connection")
+cnn.open "PROVIDER=SQLOLEDB;DATA SOURCE=sqlservername;UID=username;PWD=password;DATABASE=mydatabase "
+'set param = cmd.CreateParameter("@id", adInteger, adInput,0,0)
+%>
