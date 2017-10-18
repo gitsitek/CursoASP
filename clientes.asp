@@ -11,15 +11,25 @@
 
   <tbody>
 <%
+  Set cnn = Server.CreateObject("ADODB.Connection")
+  cnn.open Application("connectionString")
   Set reader = Server.CreateObject("ADODB.recordset")
-  reader.Open "SELECT * FROM Personas;", Application("cnn")
-  Do While reader.EOF
-    Response.Write("<tr>")
-    for each x in reader.Fields
-      Response.Write("<td>" & x & "</td>")
-    Next
-    Response.Write("</tr>")
-  Loop
+  reader.Open "SELECT * FROM Clientes", cnn
+
+  If reader.EOF Then
+    Response.Write("No records returned.") 
+  Else
+    Do While NOT reader.Eof   
+      Response.Write("<tr>")
+      Response.Write("<td>" & reader("Nombre") & "</td>")
+      Response.Write("<td>" & reader("Estado") & "</td>")
+      Response.Write("<td>" & reader("Localidad") & "</td>")
+      Response.Write("<td>" & reader("Adeudo") & "</td>")
+      Response.Write("<td>" & reader("Vence") & "</td>")
+      Response.Write("</tr>")
+      reader.MoveNext
+    Loop
+  End If
   reader.Close()
 %>
   </tbody>
