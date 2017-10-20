@@ -23,3 +23,4 @@
     <!--#include file="footer.inc"-->
   </body>
 </html>
+<% cnn.Close() %>

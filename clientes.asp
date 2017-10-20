@@ -11,13 +11,11 @@
 
   <tbody>
 <%
-  Set cnn = Server.CreateObject("ADODB.Connection")
-  cnn.open Application("connectionString")
   Set reader = Server.CreateObject("ADODB.recordset")
   reader.Open "SELECT * FROM Clientes", cnn
 
   If reader.EOF Then
-    Response.Write("No records returned.") 
+    Response.Write("No hay clientes") 
   Else
     Do While NOT reader.Eof   
       Response.Write("<tr>")
@@ -35,7 +33,7 @@
   </tbody>
   <tfoot>
     <tr>
-      <td colspan="5"><button type="button" class="btn btn-primary">Guardar</button></td>
+      <td colspan="5"><a class="btn btn-primary" href="/?page=clientes&action=new">Nuevo</a></td>
     </tr>
   </tfoot>
 </table>
