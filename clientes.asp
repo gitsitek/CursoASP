@@ -24,6 +24,7 @@
       Response.Write("<td>" & reader("Localidad") & "</td>")
       Response.Write("<td>" & reader("Adeudo") & "</td>")
       Response.Write("<td>" & reader("Vence") & "</td>")
+      Response.Write("<td><a href='/?page=clientes&action=edit&id=" & reader("Id") & "'><i class='fa fa-pencil'></i></a></td>")
       Response.Write("</tr>")
       reader.MoveNext
     Loop

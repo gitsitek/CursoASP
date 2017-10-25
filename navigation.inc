@@ -13,7 +13,7 @@
           </a>
         </li>
         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Charts">
-          <a class="nav-link" href="/?page=proveedores">
+          <a class="nav-link" href="/Proveedores.aspx">
             <i class="fa fa-fw fa-area-chart"></i>
             <span class="nav-link-text">Proveedores</span>
           </a>
