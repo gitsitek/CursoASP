@@ -6,45 +6,16 @@
         <asp:Button ID="Button1" runat="server" OnClick="Button1_Click" Text="Nuevo" />
         <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False" CssClass="table" DataKeyNames="Id" DataSourceID="ProveedoresDS" EnableModelValidation="True" BorderStyle="None" GridLines="None" AllowPaging="True" AllowSorting="True" OnSelectedIndexChanged="GridView1_SelectedIndexChanged">
             <Columns>
-                <asp:CommandField ShowDeleteButton="True" ShowSelectButton="True" />
-                <asp:BoundField DataField="Id" HeaderText="Id" InsertVisible="False" ReadOnly="True" SortExpression="Id" />
+                <asp:BoundField DataField="Id" HeaderText="Id" ReadOnly="True" SortExpression="Id" />
                 <asp:BoundField DataField="Nombre" HeaderText="Nombre" SortExpression="Nombre" />
                 <asp:BoundField DataField="Estado" HeaderText="Estado" SortExpression="Estado" />
                 <asp:BoundField DataField="Localidad" HeaderText="Localidad" SortExpression="Localidad" />
-                <asp:BoundField DataField="Adeudo" HeaderText="Adeudo" SortExpression="Adeudo" DataFormatString="{0:c0}" />
-                <asp:BoundField DataField="Vence" HeaderText="Vence" SortExpression="Vence" DataFormatString="{0:d}" />
                 <asp:BoundField DataField="RFC" HeaderText="RFC" SortExpression="RFC" />
                 <asp:CheckBoxField DataField="Moral" HeaderText="Moral" SortExpression="Moral" />
-                <asp:TemplateField HeaderText="Pedidos">
-                    <ItemTemplate>
-                        <a href="/Pedidos.aspx?ProveedorID=1800625" target="_blank">Pedidos</a> 
-                    </ItemTemplate>
-                </asp:TemplateField>
+                <asp:BoundField DataField="monto" HeaderText="monto" SortExpression="monto" ReadOnly="True" />
             </Columns>
             </asp:GridView>
-            <asp:SqlDataSource ID="ProveedoresDS" runat="server" ConnectionString="<%$ ConnectionStrings:CursoASPConnectionString %>" DeleteCommand="DELETE FROM [Proveedores] WHERE [Id] = @Id" InsertCommand="INSERT INTO [Proveedores] ([Nombre], [Estado], [Localidad], [Adeudo], [Vence], [RFC], [Moral]) VALUES (@Nombre, @Estado, @Localidad, @Adeudo, @Vence, @RFC, @Moral)" SelectCommand="SELECT * FROM [Proveedores]" UpdateCommand="UPDATE [Proveedores] SET [Nombre] = @Nombre, [Estado] = @Estado, [Localidad] = @Localidad, [Adeudo] = @Adeudo, [Vence] = @Vence, [RFC] = @RFC, [Moral] = @Moral WHERE [Id] = @Id">
-                <DeleteParameters>
-                    <asp:Parameter Name="Id" Type="Int32" />
-                </DeleteParameters>
-                <InsertParameters>
-                    <asp:Parameter Name="Nombre" Type="String" />
-                    <asp:Parameter Name="Estado" Type="String" />
-                    <asp:Parameter Name="Localidad" Type="String" />
-                    <asp:Parameter Name="Adeudo" Type="Decimal" />
-                    <asp:Parameter DbType="Date" Name="Vence" />
-                    <asp:Parameter Name="RFC" Type="String" />
-                    <asp:Parameter Name="Moral" Type="Boolean" />
-                </InsertParameters>
-                <UpdateParameters>
-                    <asp:Parameter Name="Nombre" Type="String" />
-                    <asp:Parameter Name="Estado" Type="String" />
-                    <asp:Parameter Name="Localidad" Type="String" />
-                    <asp:Parameter Name="Adeudo" Type="Decimal" />
-                    <asp:Parameter DbType="Date" Name="Vence" />
-                    <asp:Parameter Name="RFC" Type="String" />
-                    <asp:Parameter Name="Moral" Type="Boolean" />
-                    <asp:Parameter Name="Id" Type="Int32" />
-                </UpdateParameters>
+            <asp:SqlDataSource ID="ProveedoresDS" runat="server" ConnectionString="<%$ ConnectionStrings:CursoASPConnectionString %>" SelectCommand="SELECT * FROM [vw_proveedores]">
             </asp:SqlDataSource>
         
         <asp:FormView ID="FormView1" runat="server" DataKeyNames="Id" DataSourceID="ProveedoresFormDS" EnableModelValidation="True" OnItemUpdated="FormView1_ItemUpdated" OnModeChanged="FormView1_ModeChanged">
