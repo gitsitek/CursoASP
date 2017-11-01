@@ -6,6 +6,7 @@
         <asp:Button ID="Button1" runat="server" OnClick="Button1_Click" Text="Nuevo" />
         <asp:GridView ID="GridView1" runat="server" AutoGenerateColumns="False" CssClass="table" DataKeyNames="Id" DataSourceID="ProveedoresDS" EnableModelValidation="True" BorderStyle="None" GridLines="None" AllowPaging="True" AllowSorting="True" OnSelectedIndexChanged="GridView1_SelectedIndexChanged">
             <Columns>
+                <asp:CommandField ShowSelectButton="True" />
                 <asp:BoundField DataField="Id" HeaderText="Id" ReadOnly="True" SortExpression="Id" />
                 <asp:BoundField DataField="Nombre" HeaderText="Nombre" SortExpression="Nombre" />
                 <asp:BoundField DataField="Estado" HeaderText="Estado" SortExpression="Estado" />
@@ -20,30 +21,29 @@
         
         <asp:FormView ID="FormView1" runat="server" DataKeyNames="Id" DataSourceID="ProveedoresFormDS" EnableModelValidation="True" OnItemUpdated="FormView1_ItemUpdated" OnModeChanged="FormView1_ModeChanged">
             <EditItemTemplate>
+                <div style="margin-top:100px">
                 <div class="input-group">
                     <div class="input-group-addon">Nombre</div>
                     <asp:TextBox ID="NombreTextBox" runat="server" CssClass="form-control" Text='<%# Bind("Nombre") %>' required />
                 </div>
                 <br />
-                <div class="input-group">
+                <div class='input-group'>
                     <div class="input-group-addon">Estado</div>
-                    <asp:TextBox ID="EstadoTextBox" CssClass="form-control" runat="server" Text='<%# Bind("Estado") %>' />
+                    <asp:DropDownList ID="DropDownList1" runat="server" AutoPostBack="True" DataSourceID="EstadosDS" DataTextField="nombre" DataValueField="Id">
+                    </asp:DropDownList>
+                    <asp:SqlDataSource ID="EstadosDS" runat="server" ConnectionString="<%$ ConnectionStrings:CursoASPConnectionString %>" SelectCommand="SELECT * FROM [Localidades] WHERE ([padre_id] IS NULL)"></asp:SqlDataSource>
+                </div>
+                <div class='input-group'>
+                    <div class="input-group-addon">Ciudad</div>
+                    <asp:DropDownList ID="ddLocalidades" runat="server" DataSourceID="LocalidadesDS" DataTextField="nombre" DataValueField="Id">
+                    </asp:DropDownList>
+                    <asp:SqlDataSource ID="LocalidadesDS" runat="server" ConnectionString="<%$ ConnectionStrings:CursoASPConnectionString %>" SelectCommand="SELECT * FROM [Localidades] WHERE ([padre_id] = @padre_id)">
+                        <SelectParameters>
+                            <asp:ControlParameter ControlID="DropDownList1" Name="padre_id" PropertyName="SelectedValue" Type="Int32" />
+                        </SelectParameters>
+                    </asp:SqlDataSource>
                 </div>
                 <br />
-                <div class="input-group">
-                    <div class="input-group-addon">Localidad</div>
-                    <asp:TextBox ID="LocalidadTextBox" CssClass="form-control" runat="server" Text='<%# Bind("Localidad") %>' />
-                </div>
-                <br />
-                <div class="input-group">
-                    <div class="input-group-addon">Adeudo</div>
-                    <asp:TextBox ID="AdeudoTextBox" runat="server" CssClass="form-control" Text='<%# Bind("Adeudo") %>' required />
-                </div>
-                <br />
-                <div class="input-group">
-                    <div class="input-group-addon">Vence</div>
-                    <asp:TextBox ID="VenceTextBox" runat="server" Text='<%# Bind("Vence") %>'/>
-                </div>
                 <br />
                 <div class='input-group'>
                     <div class="input-group-addon">RFC</div>
@@ -57,22 +57,11 @@
                 <br />
                 <asp:LinkButton ID="UpdateButton" runat="server" CausesValidation="True" CommandName="Update" Text="Update" />
 &nbsp;<asp:LinkButton ID="UpdateCancelButton" runat="server" CausesValidation="False" CommandName="Cancel" Text="Cancel" />
+                    </div>
             </EditItemTemplate>
             <InsertItemTemplate>
                 Nombre:
                 <asp:TextBox ID="NombreTextBox" runat="server" Text='<%# Bind("Nombre") %>' />
-                <br />
-                Estado:
-                <asp:TextBox ID="EstadoTextBox" runat="server" Text='<%# Bind("Estado") %>' />
-                <br />
-                Localidad:
-                <asp:TextBox ID="LocalidadTextBox" runat="server" Text='<%# Bind("Localidad") %>' />
-                <br />
-                Adeudo:
-                <asp:TextBox ID="AdeudoTextBox" runat="server" Text='<%# Bind("Adeudo") %>' />
-                <br />
-                Vence:
-                <asp:TextBox ID="VenceTextBox" runat="server" Text='<%# Bind("Vence") %>' />
                 <br />
                 RFC:
                 <asp:TextBox ID="RFCTextBox" runat="server" Text='<%# Bind("RFC") %>' />
@@ -90,18 +79,6 @@
                 Nombre:
                 <asp:Label ID="NombreLabel" runat="server" Text='<%# Bind("Nombre") %>' />
                 <br />
-                Estado:
-                <asp:Label ID="EstadoLabel" runat="server" Text='<%# Bind("Estado") %>' />
-                <br />
-                Localidad:
-                <asp:Label ID="LocalidadLabel" runat="server" Text='<%# Bind("Localidad") %>' />
-                <br />
-                Adeudo:
-                <asp:Label ID="AdeudoLabel" runat="server" Text='<%# Bind("Adeudo") %>' />
-                <br />
-                Vence:
-                <asp:Label ID="VenceLabel" runat="server" Text='<%# Bind("Vence") %>' />
-                <br />
                 RFC:
                 <asp:Label ID="RFCLabel" runat="server" Text='<%# Bind("RFC") %>' />
                 <br />
@@ -113,30 +90,24 @@
                 &nbsp;<asp:LinkButton ID="NewButton" runat="server" CausesValidation="False" CommandName="New" Text="New" />
             </ItemTemplate>
         </asp:FormView>
-        <asp:SqlDataSource ID="ProveedoresFormDS" runat="server" ConnectionString="<%$ ConnectionStrings:CursoASPConnectionString %>" DeleteCommand="DELETE FROM [Proveedores] WHERE [Id] = @Id" InsertCommand="INSERT INTO [Proveedores] ([Nombre], [Estado], [Localidad], [Adeudo], [Vence], [RFC], [Moral]) VALUES (@Nombre, @Estado, @Localidad, @Adeudo, @Vence, @RFC, @Moral)" SelectCommand="SELECT * FROM [Proveedores] WHERE ([Id] = @Id)" UpdateCommand="UPDATE [Proveedores] SET [Nombre] = @Nombre, [Estado] = @Estado, [Localidad] = @Localidad, [Adeudo] = @Adeudo, [Vence] = @Vence, [RFC] = @RFC, [Moral] = @Moral WHERE [Id] = @Id">
+        <asp:SqlDataSource ID="ProveedoresFormDS" runat="server" ConnectionString="<%$ ConnectionStrings:CursoASPConnectionString %>" DeleteCommand="DELETE FROM [Proveedores] WHERE [Id] = @Id" InsertCommand="INSERT INTO [Proveedores] ([Nombre], [RFC], [Moral], [localidad_id]) VALUES (@Nombre, @RFC, @Moral, @localidad_id)" SelectCommand="SELECT * FROM [Proveedores] WHERE ([Id] = @Id)" UpdateCommand="UPDATE [Proveedores] SET [Nombre] = @Nombre, [RFC] = @RFC, [Moral] = @Moral, [localidad_id] = @localidad_id WHERE [Id] = @Id" OnUpdating="ProveedoresFormDS_Updating">
             <DeleteParameters>
                 <asp:Parameter Name="Id" Type="Int32" />
             </DeleteParameters>
             <InsertParameters>
                 <asp:Parameter Name="Nombre" Type="String" />
-                <asp:Parameter Name="Estado" Type="String" />
-                <asp:Parameter Name="Localidad" Type="String" />
-                <asp:Parameter Name="Adeudo" Type="Decimal" />
-                <asp:Parameter DbType="Date" Name="Vence" />
                 <asp:Parameter Name="RFC" Type="String" />
                 <asp:Parameter Name="Moral" Type="Boolean" />
+                <asp:Parameter Name="localidad_id" Type="Int32" />
             </InsertParameters>
             <SelectParameters>
                 <asp:ControlParameter ControlID="GridView1" Name="Id" PropertyName="SelectedValue" Type="Int32" />
             </SelectParameters>
             <UpdateParameters>
                 <asp:Parameter Name="Nombre" Type="String" />
-                <asp:Parameter Name="Estado" Type="String" />
-                <asp:Parameter Name="Localidad" Type="String" />
-                <asp:Parameter Name="Adeudo" Type="Decimal" />
-                <asp:Parameter DbType="Date" Name="Vence" />
                 <asp:Parameter Name="RFC" Type="String" />
                 <asp:Parameter Name="Moral" Type="Boolean" />
+                <asp:Parameter Name="localidad_id" Type="Int32" />
                 <asp:Parameter Name="Id" Type="Int32" />
             </UpdateParameters>
         </asp:SqlDataSource>
