@@ -1,6 +1,5 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeFile="Proveedores.aspx.cs" Inherits="Proveedores" %>
+﻿<%@ Page Title="" Language="C#" AutoEventWireup="true" CodeFile="Proveedores.aspx.cs" Inherits="Proveedores" %>
 
-<asp:Content ID="Content1" ContentPlaceHolderID="mainContent" Runat="Server">
     <form id="form1" runat="server">
         <h1>Proveedores</h1>
         <asp:Button ID="Button1" runat="server" OnClick="Button1_Click" Text="Nuevo" />
@@ -113,5 +112,4 @@
         </asp:SqlDataSource>
         
     </form>
-</asp:Content>
 
