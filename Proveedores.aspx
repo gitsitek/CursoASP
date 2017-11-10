@@ -1,5 +1,5 @@
-﻿<%@ Page Title="" Language="C#" AutoEventWireup="true" CodeFile="Proveedores.aspx.cs" Inherits="Proveedores" %>
-
+﻿<%@ Page Title="" Language="C#" AutoEventWireup="true" MasterPageFile="~/MasterPage.master" CodeFile="Proveedores.aspx.cs" Inherits="Proveedores" %>
+<asp:Content ID="Content1" ContentPlaceHolderID="mainContent" Runat="Server"> 
     <form id="form1" runat="server">
         <h1>Proveedores</h1>
         <asp:Button ID="Button1" runat="server" OnClick="Button1_Click" Text="Nuevo" />
@@ -28,19 +28,11 @@
                 <br />
                 <div class='input-group'>
                     <div class="input-group-addon">Estado</div>
-                    <asp:DropDownList ID="DropDownList1" runat="server" AutoPostBack="True" DataSourceID="EstadosDS" DataTextField="nombre" DataValueField="Id">
-                    </asp:DropDownList>
-                    <asp:SqlDataSource ID="EstadosDS" runat="server" ConnectionString="<%$ ConnectionStrings:CursoASPConnectionString %>" SelectCommand="SELECT * FROM [Localidades] WHERE ([padre_id] IS NULL)"></asp:SqlDataSource>
+                    <select id="estados"></select>
                 </div>
                 <div class='input-group'>
                     <div class="input-group-addon">Ciudad</div>
-                    <asp:DropDownList ID="ddLocalidades" runat="server" DataSourceID="LocalidadesDS" DataTextField="nombre" DataValueField="Id">
-                    </asp:DropDownList>
-                    <asp:SqlDataSource ID="LocalidadesDS" runat="server" ConnectionString="<%$ ConnectionStrings:CursoASPConnectionString %>" SelectCommand="SELECT * FROM [Localidades] WHERE ([padre_id] = @padre_id)">
-                        <SelectParameters>
-                            <asp:ControlParameter ControlID="DropDownList1" Name="padre_id" PropertyName="SelectedValue" Type="Int32" />
-                        </SelectParameters>
-                    </asp:SqlDataSource>
+                    <select id="ciudades" name="localidad_id"></select>
                 </div>
                 <br />
                 <br />
@@ -89,7 +81,7 @@
                 &nbsp;<asp:LinkButton ID="NewButton" runat="server" CausesValidation="False" CommandName="New" Text="New" />
             </ItemTemplate>
         </asp:FormView>
-        <asp:SqlDataSource ID="ProveedoresFormDS" runat="server" ConnectionString="<%$ ConnectionStrings:CursoASPConnectionString %>" DeleteCommand="DELETE FROM [Proveedores] WHERE [Id] = @Id" InsertCommand="INSERT INTO [Proveedores] ([Nombre], [RFC], [Moral], [localidad_id]) VALUES (@Nombre, @RFC, @Moral, @localidad_id)" SelectCommand="SELECT * FROM [Proveedores] WHERE ([Id] = @Id)" UpdateCommand="UPDATE [Proveedores] SET [Nombre] = @Nombre, [RFC] = @RFC, [Moral] = @Moral, [localidad_id] = @localidad_id WHERE [Id] = @Id" OnUpdating="ProveedoresFormDS_Updating">
+        <asp:SqlDataSource ID="ProveedoresFormDS" runat="server" ConnectionString="<%$ ConnectionStrings:CursoASPConnectionString %>" DeleteCommand="DELETE FROM [Proveedores] WHERE [Id] = @Id" InsertCommand="INSERT INTO [Proveedores] ([Nombre], [RFC], [Moral], [localidad_id]) VALUES (@Nombre, @RFC, @Moral, @localidad_id)" SelectCommand="SELECT * FROM [Proveedores] WHERE ([Id] = @Id)" UpdateCommand="UPDATE [Proveedores] SET [Nombre] = @Nombre, [RFC] = @RFC, [Moral] = @Moral, [localidad_id] = @localidad_id WHERE [Id] = @Id" OnUpdating="ProveedoresFormDS_Updating" >
             <DeleteParameters>
                 <asp:Parameter Name="Id" Type="Int32" />
             </DeleteParameters>
@@ -112,4 +104,30 @@
         </asp:SqlDataSource>
         
     </form>
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                url: "Localidades.asmx/GetEstados",
+                method: "POST"
+            }).done(function (data) {
+                estados = JSON.parse(data.getElementsByTagName("string")[0].innerHTML);
+                for (k in estados) 
+                    $("select#estados").append("<option value=" + k + ">" + estados[k] + "</option>");
+                $("select#estados").change();
+            });
 
+            $("select#estados").change(function () {
+                $.ajax({
+                    url: "Localidades.asmx/GetCiudades?padre_id=" + $(this).val(),
+                    method: "POST",
+                    data: "padre_id="+$(this).val()
+                }).done(function (data) {
+                    $("select#ciudades option").remove();
+                    ciudades = JSON.parse(data.getElementsByTagName("string")[0].innerHTML);
+                    for (k in ciudades)
+                        $("select#ciudades").append("<option value=" + k + ">" + ciudades[k] + "</option>");
+                });
+            });
+        });
+</script>
+</asp:Content> 
