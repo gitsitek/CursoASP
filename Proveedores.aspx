@@ -118,7 +118,7 @@
 
             $("select#estados").change(function () {
                 $.ajax({
-                    url: "Localidades.asmx/GetCiudades?padre_id=" + $(this).val(),
+                    url: "Localidades.asmx/GetCiudades",
                     method: "POST",
                     data: "padre_id="+$(this).val()
                 }).done(function (data) {
